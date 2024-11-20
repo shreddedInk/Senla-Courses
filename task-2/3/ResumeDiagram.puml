@@ -1,5 +1,8 @@
 @startuml
 class Resume {
+    - resumeCertificate : ResumeCertificate
+    - skill : Skill
+    - workExperience : WorkExperience
     - id : String
     - name : String
     - email : String
@@ -48,6 +51,7 @@ class WorkExperience {
 }
 
 class Certificate {
+    - resumeCertificate : ResumeCertificate
     - certificateName : String
     - issuingOrganization : String
     - issueDate : String
@@ -70,9 +74,9 @@ class ResumeCertificate {
     + displayResumeCertificateInfo() : void
 }
 
-Resume "1" -- "1" Summary : has
-Resume "1" -- "many" Skill : has
-Resume "1" -- "many" WorkExperience : has
-ResumeCertificate "many" -- "many" Certificate : links
-ResumeCertificate "many" -- "many" Resume : links
+Resume "1" *-- "1" Summary : has
+Resume "1" o-- "many" Skill : has
+Resume "1" *-- "many" WorkExperience : has
+ResumeCertificate "many" o-- "1" Certificate : links
+ResumeCertificate "many" o-- "1" Resume : links
 @enduml
