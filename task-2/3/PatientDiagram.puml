@@ -84,6 +84,6 @@ class Prescription {
 
 Patient "1" *-- "1" Address : residesAt
 Patient "1" --o "many" Appointment : has
-Patient "1" o-- "many" MedicalRecord : linkedTo
+Patient "1" --o "many" MedicalRecord : linkedTo
 MedicalRecord "1" *-- "many" Prescription : includes
 @enduml
