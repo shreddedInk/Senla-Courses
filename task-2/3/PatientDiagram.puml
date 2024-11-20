@@ -1,0 +1,89 @@
+@startuml
+class Patient {
+    - medicalRecords : List<MedicalRecord>
+    - appointments : <ListAppointment>
+    - id : String
+    - name : String
+    - dateOfBirth : String
+    - phone : String
+    - address : Address
+    + getId() : String
+    + setId(id : String) : void
+    + getName() : String
+    + setName(name : String) : void
+    + getDateOfBirth() : String
+    + setDateOfBirth(dateOfBirth : String) : void
+    + getPhone() : String
+    + setPhone(phone : String) : void
+    + getAddress() : Address
+    + setAddress(address : Address) : void
+    + getMedicalRecords() : List<MedicalRecord>
+    + getAppointments() : List<Appointment>
+    + addMedicalRecord(medicalRecord : MedicalRecord) : void
+    + addAppointment(appointment : Appointment) : void
+    + displayPatientInfo() : void
+}
+
+class Address {
+    - street : String
+    - city : String
+    - zipCode : String
+    + getStreet() : String
+    + setStreet(street : String) : void
+    + getCity() : String
+    + setCity(city : String) : void
+    + getZipCode() : String
+    + setZipCode(zipCode : String) : void
+}
+
+class Appointment {
+    - patient : Patient
+    - appointmentId : String
+    - appointmentDate : String
+    - doctorName : String
+    - department : String
+    + getAppointmentId() : String
+    + setAppointmentId(appointmentId : String) : void
+    + getAppointmentDate() : String
+    + setAppointmentDate(appointmentDate : String) : void
+    + getDoctorName() : String
+    + setDoctorName(doctorName : String) : void
+    + getDepartment() : String
+    + setDepartment(department : String) : void
+    + displayAppointmentInfo() : void
+}
+
+class MedicalRecord {
+    - recordId : String
+    - diagnosis : String
+    - treatment : String
+    - prescriptions : List<Prescription>
+    + getRecordId() : String
+    + setRecordId(recordId : String) : void
+    + getDiagnosis() : String
+    + setDiagnosis(diagnosis : String) : void
+    + getTreatment() : String
+    + setTreatment(treatment : String) : void
+    + getPrescriptions() : List<Prescription>
+    + addPrescription(prescription : Prescription) : void
+    + displayMedicalRecordInfo() : void
+}
+
+class Prescription {
+    - prescriptionId : String
+    - medicationName : String
+    - dosage : String
+    + getPrescriptionId() : String
+    + setPrescriptionId(prescriptionId : String) : void
+    + getMedicationName() : String
+    + setMedicationName(medicationName : String) : void
+    + getDosage() : String
+    + setDosage(dosage : String) : void
+    + displayPrescriptionInfo() : void
+}
+
+Patient "1" *-- "1" Address : residesAt
+Patient "1" --o "many" Appointment : has
+Patient "1" --o "many" MedicalRecord : linkedTo
+MedicalRecord "1" *-- "many" Prescription : includes
+@enduml

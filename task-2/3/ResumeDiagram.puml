@@ -1,0 +1,85 @@
+@startuml
+class Resume {
+    - resumeCertificates : List<ResumeCertificate>
+    - skills : List<Skill>
+    - workExperiences : List<WorkExperience>
+    - id : String
+    - name : String
+    - email : String
+    - phone : String
+    - summary : Summary
+    + getId() : String
+    + setId(id : String) : void
+    + getName() : String
+    + setName(name : String) : void
+    + getEmail() : String
+    + setEmail(email : String) : void
+    + getPhone() : String
+    + setPhone(phone : String) : void
+    + getSummary() : Summary
+    + setSummary(summary : Summary) : void
+    + getResumeCertificates() : List<ResumeCertificate>
+    + getSkills() : List<Skill>
+    + getWorkExperiences() : List<WorkExperience>
+    + displayResumeInfo() : void
+}
+
+class Summary {
+    - text : String
+    + getText() : String
+    + setText(text : String) : void
+}
+
+class Skill {
+    - skillName : String
+    - proficiencyLevel : String
+    + getSkillName() : String
+    + setSkillName(skillName : String) : void
+    + getProficiencyLevel() : String
+    + setProficiencyLevel(proficiencyLevel : String) : void
+    + displaySkillInfo() : void
+}
+
+class WorkExperience {
+    - company : String
+    - position : String
+    - years : int
+    + getCompany() : String
+    + setCompany(company : String) : void
+    + getPosition() : String
+    + setPosition(position : String) : void
+    + getYears() : int
+    + setYears(years : int) : void
+    + displayWorkExperience() : void
+}
+
+class Certificate {
+    - resumeCertificate : ResumeCertificate
+    - certificateName : String
+    - issuingOrganization : String
+    - issueDate : String
+    + getCertificateName() : String
+    + setCertificateName(certificateName : String) : void
+    + getIssuingOrganization() : String
+    + setIssuingOrganization(issuingOrganization : String) : void
+    + getIssueDate() : String
+    + setIssueDate(issueDate : String) : void
+    + displayCertificateInfo() : void
+}
+
+class ResumeCertificate {
+    - resume : Resume
+    - certificate : Certificate
+    + getResume() : Resume
+    + setResume(resume : Resume) : void
+    + getCertificate() : Certificate
+    + setCertificate(certificate : Certificate) : void
+    + displayResumeCertificateInfo() : void
+}
+
+Resume "1" *-- "1" Summary : has
+Resume "1" o-- "many" Skill : has
+Resume "1" *-- "many" WorkExperience : has
+ResumeCertificate "many" o-- "1" Certificate : links
+ResumeCertificate "many" o-- "1" Resume : links
+@enduml
