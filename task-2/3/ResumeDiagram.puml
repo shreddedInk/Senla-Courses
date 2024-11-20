@@ -1,8 +1,8 @@
 @startuml
 class Resume {
-    - resumeCertificate : ResumeCertificate
-    - skill : Skill
-    - workExperience : WorkExperience
+    - resumeCertificates : List<ResumeCertificate>
+    - skills : List<Skill>
+    - workExperiences : List<WorkExperience>
     - id : String
     - name : String
     - email : String
@@ -18,6 +18,9 @@ class Resume {
     + setPhone(phone : String) : void
     + getSummary() : Summary
     + setSummary(summary : Summary) : void
+    + getResumeCertificates() : List<ResumeCertificate>
+    + getSkills() : List<Skill>
+    + getWorkExperiences() : List<WorkExperience>
     + displayResumeInfo() : void
 }
 

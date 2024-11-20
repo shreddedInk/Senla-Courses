@@ -1,6 +1,7 @@
 @startuml
 class Patient {
-    - appointment : Appointment
+    - medicalRecords : List<MedicalRecord>
+    - appointments : <ListAppointment>
     - id : String
     - name : String
     - dateOfBirth : String
@@ -16,6 +17,10 @@ class Patient {
     + setPhone(phone : String) : void
     + getAddress() : Address
     + setAddress(address : Address) : void
+    + getMedicalRecords() : List<MedicalRecord>
+    + getAppointments() : List<Appointment>
+    + addMedicalRecord(medicalRecord : MedicalRecord) : void
+    + addAppointment(appointment : Appointment) : void
     + displayPatientInfo() : void
 }
 
