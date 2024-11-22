@@ -1,0 +1,136 @@
+@startuml
+
+class Main {
+    - player : Player
+    - gameState : State
+    - matrix : Matrix
+    - scoreBoard : ScoreBoard
+    - timer : Timer
+    + startGame() : void
+    + pauseGame() : void
+    + stopGame() : void
+}
+
+class Matrix {
+    + rows : int = 20
+    + columns : int = 10
+    - activeShape : Tetromino
+    - grid : boolean[][]
+    + checkForCompletedLine() : int
+    + updateShapePosition() : void
+    + clearLines() : int
+    + spawnNewShape(Tetromino) : void
+}
+
+class MainMenu {
+    - currentChoice : String
+    + displayMenu() : void
+    + selectOption(String) : void
+}
+
+class Player {
+    - nickname : String
+    - bestScore : int
+    + updateBestScore(int) : void
+    + getNickname() : String
+    + getBestScore() : int
+}
+
+class DisplayPanel {
+    - screenHeight : int
+    - screenWidth : int
+    + renderMatrix(Matrix) : void
+    + renderScore(ScoreBoard) : void
+    + renderTimer(Timer) : void
+}
+
+class ScoreBoard {
+    - currentScore : int
+    - highScore : int
+    + displayPlayer(Player) : void
+    + getScore() : int
+    + updateScore(int) : void
+    + resetScore() : void
+}
+
+class Timer {
+    - timeRemaining : int
+    - isPaused : boolean
+    + startTimer() : void
+    + pauseTimer() : void
+    + resetTimer() : void
+    + getTimeRemaining() : int
+}
+
+abstract class Tetromino {
+    - shapeMatrix : boolean[][]
+    - x : int
+    - y : int
+    - color : Color
+    + spawnShape(int, int) : void
+    + moveLeft() : void
+    + moveRight() : void
+    + rotateRight() : void
+    + rotateLeft() : void
+    + drop() : void
+    + render() : void
+}
+
+class CreateShape {
+    + getRandomShape() : Tetromino
+}
+
+enum Color {
+    + RED
+    + YELLOW
+    + ORANGE
+    + GREEN
+    + BLUE
+    + INDIGO
+    + PURPLE
+}
+
+class IShape extends Tetromino {
+}
+
+class OShape extends Tetromino {
+}
+
+class TShape extends Tetromino {
+}
+
+class SShape extends Tetromino {
+}
+
+class ZShape extends Tetromino {
+}
+
+class JShape extends Tetromino {
+}
+
+class LShape extends Tetromino {
+}
+
+interface ShapePosition {
+    + hasCollision(Matrix) : boolean
+    + isOutOfBounds() : boolean
+    + isLockedDown() : boolean
+}
+
+Main o-- Matrix
+Main *-- Player
+Main o-- ScoreBoard
+Main o-- Timer
+Main o-- DisplayPanel
+Main *-- MainMenu
+
+Matrix *-- Tetromino
+Matrix o-- CreateShape
+Matrix ..|> ShapePosition
+
+Tetromino o-- Color
+CreateShape ..|> Tetromino
+
+ScoreBoard  *--  Player
+
+@enduml
