@@ -137,6 +137,6 @@ Matrix "1" ..|> ShapePosition
 Tetromino "1" o-- "1" Color
 CreateShape "1" ..|> "many" Tetromino
 
-ScoreBoard "1" *-- "many" Player
+ScoreBoard "1" *-- "1" Player
 
 @enduml
