@@ -2,6 +2,7 @@
 
 class Main {
     - player : Player
+    - menu : MainMenu
     - gameState : State
     - matrix : Matrix
     - scoreBoard : ScoreBoard
@@ -15,11 +16,15 @@ class Matrix {
     + rows : int = 20
     + columns : int = 10
     - activeShape : Tetromino
+    - placedShapes : List<Tetromino>
     - grid : boolean[][]
     + checkForCompletedLine() : int
     + updateShapePosition() : void
     + clearLines() : int
-    + spawnNewShape(Tetromino) : void
+    + spawnNewShape(ShapeFactory) : void
+    + hasCollision(Matrix) : boolean
+    + isOutOfBounds() : boolean
+    + isLockedDown() : boolean
 }
 
 class MainMenu {
@@ -47,6 +52,7 @@ class DisplayPanel {
 class ScoreBoard {
     - currentScore : int
     - highScore : int
+    - player : Player
     + displayPlayer(Player) : void
     + getScore() : int
     + updateScore(int) : void
@@ -117,20 +123,20 @@ interface ShapePosition {
     + isLockedDown() : boolean
 }
 
-Main o-- Matrix
-Main *-- Player
-Main o-- ScoreBoard
-Main o-- Timer
-Main o-- DisplayPanel
-Main *-- MainMenu
+Main "1" o-- "1" Matrix
+Main "1" *-- "1" Player
+Main "1" o-- "1" ScoreBoard
+Main "1" o-- "1" Timer
+Main "1" o-- "1" DisplayPanel
+Main "1" *-- "1" MainMenu
 
-Matrix *-- Tetromino
-Matrix o-- CreateShape
-Matrix ..|> ShapePosition
+Matrix "1" *-- "many" Tetromino
+Matrix "1" o-- "1" CreateShape
+Matrix "1" ..|> ShapePosition
 
-Tetromino o-- Color
-CreateShape ..|> Tetromino
+Tetromino "1" o-- "1" Color
+CreateShape "1" ..|> "many" Tetromino
 
-ScoreBoard  *--  Player
+ScoreBoard "1" *-- "many" Player
 
 @enduml
