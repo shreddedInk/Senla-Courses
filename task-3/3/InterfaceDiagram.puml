@@ -1,0 +1,22 @@
+@startuml
+interface IAssemblyLine {
+    + assembleProduct(IProduct) : IProduct
+}
+
+interface IProductPart
+
+interface IProduct {
+    + installFirstPart(IProductPart) : void
+    + installSecondPart(IProductPart) : void
+    + installThirdPart(IProductPart) : void
+}
+
+interface ILineStep {
+    + buildProductPart() : IProductPart
+}
+
+IAssemblyLine o-- ILineStep
+IProductPart .. ILineStep
+IAssemblyLine .. IProduct
+IProductPart --* IProduct
+@enduml
