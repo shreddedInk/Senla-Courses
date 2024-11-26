@@ -6,8 +6,11 @@ public class Main {
 
         IAssemblyLine vazAssemblyLine = new VAZAssemblyLine(bodyStep, chassisStep, engineStep);
 
-        IProduct vaz = new VAZ();
+        VAZ vaz = new VAZ();
 
         vazAssemblyLine.assembleProduct(vaz);
+
+        System.out.println("Details of the assembled VAZ:");
+        vaz.displayParts();
     }
 }
