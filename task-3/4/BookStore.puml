@@ -1,0 +1,66 @@
+@startuml
+
+enum OrderStatus {
+    OPEN
+    CLOSED
+    CANCELED
+}
+
+class Book {
+    - String name
+    - String author
+    - int publishingYear
+    - boolean available
+    + Book(String name, String author, int publishingYear)
+    + String getName()
+    + String getAuthor()
+    + int getPublishingYear()
+    + boolean isAvailable()
+    + void setAvailable(boolean available)
+    + boolean equals(Object o)
+    + int hashCode()
+}
+
+class PurchaseOrder {
+    - Set<Book> cart
+    - OrderStatus status
+    + PurchaseOrder(Set<Book> cart)
+    + Set<Book> getCart()
+    + OrderStatus getStatus()
+    + void setStatus(OrderStatus status)
+    + boolean isCloseable()
+}
+
+class LibraryRequest {
+    - Book requestedBook
+    + LibraryRequest(Book requestedBook)
+    + Book getRequestedBook()
+}
+
+class LibraryInventory {
+    + static void addBook(Book book)
+    + static void writeBookOff(Book book)
+}
+
+class BookStore {
+    - Set<Book> availableBooks
+    - ArrayList<PurchaseOrder> activePurchaseOrders
+    - ArrayList<LibraryRequest> pendingRequests
+    + BookStore(Set<Book> availableBooks)
+    + PurchaseOrder generateOrder(Set<Book> selectedBooks)
+    + void finalizeOrder(PurchaseOrder purchaseOrder)
+    + void voidOrder(PurchaseOrder purchaseOrder)
+    + void addBookToInventory(Book book)
+    + void removeBookFromInventory(Book book)
+    + void resolveBookRequest(Book book)
+}
+
+BookStore "1" --> "many" PurchaseOrder : generates >
+BookStore "1" --> "many" LibraryRequest : manages >
+BookStore "1" --* "1" LibraryInventory : interacts with >
+BookStore "many" --> "many" Book : manages >
+LibraryRequest "many" --> "1" Book : requests >
+LibraryInventory "1" --> "many" Book : manages >
+PurchaseOrder "many" --> "many" Book : contains >
+
+@enduml
