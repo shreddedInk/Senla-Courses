@@ -1,0 +1,76 @@
+@startuml
+
+enum OrderStatus {
+    OPEN
+    CLOSED
+    CANCELED
+}
+
+class Book {
+    - String title
+    - String writer
+    - int yearPublished
+    - boolean isAvailable
+    + Book(String title, String writer, int yearPublished)
+    + String getTitle()
+    + String getWriter()
+    + int getYearPublished()
+    + boolean getAvailability()
+    + void changeAvailability(boolean status)
+    + boolean equals(Object obj)
+    + int hashCode()
+}
+
+class PurchaseOrder {
+    - Set<Book> items
+    - OrderStatus currentStatus
+    + PurchaseOrder(Set<Book> items)
+    + Set<Book> getItems()
+    + OrderStatus getCurrentStatus()
+    + void updateStatus(OrderStatus newStatus)
+    + boolean canBeClosed()
+}
+
+class LibraryRequest {
+    - Book requestedBook
+    - PurchaseOrder associatedPurchaseOrder
+    + LibraryRequest(Book requestedBook, PurchaseOrder associatedPurchaseOrder)
+    + Book getRequestedBook()
+    + PurchaseOrder getAssociatedOrder()
+}
+
+class LibraryInventory {
+    - Set<Book> inventory
+    + LibraryInventory()
+    + void markBookAsAvailable(Book book)
+    + void removeBookFromInventory(Book book)
+}
+
+class BookStore {
+    - Set<Book> availableBooks
+    - ArrayList<PurchaseOrder> activePurchaseOrders
+    - ArrayList<LibraryRequest> pendingRequests
+    - LibraryInventory libraryInventory
+    + BookStore(Set<Book> availableBooks, LibraryInventory libraryInventory)
+    + PurchaseOrder generateOrder(Set<Book> selectedBooks)
+    + void finalizeOrder(PurchaseOrder purchaseOrder)
+    + void voidOrder(PurchaseOrder purchaseOrder)
+    + void markBookAsAvailable(Book book)
+    + void removeBookFromInventory(Book book)
+    + void resolveBookRequest(Book book)
+}
+
+BookStore "1" --* "1" LibraryInventory
+BookStore "1" --o "many" Book
+BookStore "1" --o "many" PurchaseOrder
+BookStore "1" --* "many" LibraryRequest
+
+LibraryRequest "1" --> "1" Book
+LibraryRequest "1" --> "1" PurchaseOrder
+
+LibraryInventory "1" --* "many" Book
+
+PurchaseOrder "1" --o "many" Book
+
+
+@enduml
