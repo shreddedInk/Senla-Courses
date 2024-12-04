@@ -5,16 +5,15 @@ public class BookStore {
     private Set<Book> availableBooks;
     private ArrayList<PurchaseOrder> activePurchaseOrders;
     private ArrayList<LibraryRequest> pendingRequests;
+    private LibraryInventory libraryInventory;
 
-    public BookStore(Set<Book> availableBooks) {
+    public BookStore(Set<Book> availableBooks, LibraryInventory libraryInventory) {
         this.availableBooks = availableBooks;
         this.activePurchaseOrders = new ArrayList<>();
         this.pendingRequests = new ArrayList<>();
+        this.libraryInventory = libraryInventory;
     }
 
-    public List<Book> getAvailableBooksSorted(Comparator<Book> comparator) {
-        return availableBooks.stream().sorted(comparator).collect(Collectors.toList());
-    }
 
     public PurchaseOrder generateOrder(Set<Book> selectedBooks) {
         PurchaseOrder order = new PurchaseOrder(selectedBooks);
@@ -73,4 +72,40 @@ public class BookStore {
                 .filter(order -> !order.getOrderDate().before(startDate) && !order.getOrderDate().after(endDate))
                 .count();
     }
+
+    public List<Book> sortBooks(Comparator<Book> comparator) {
+        List<Book> sortedBooks = new ArrayList<>(availableBooks);
+        sortedBooks.sort(comparator);
+        return sortedBooks;
+    }
+
+
+    public List<PurchaseOrder> sortOrders(Comparator<PurchaseOrder> comparator) {
+        return activePurchaseOrders.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> sortRequests(Comparator<Book> comparator) {
+        Map<Book, Long> requestCounts = pendingRequests.stream()
+                .collect(Collectors.groupingBy(LibraryRequest::getRequestedBook, Collectors.counting()));
+
+        return requestCounts.keySet().stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> getStaleBooks(Date currentDate) {
+        long sixMonthsInMillis = 6L * 30 * 24 * 60 * 60 * 1000; // 6 месяцев в миллисекундах
+        return availableBooks.stream()
+                .filter(book -> {
+                    Date lastSoldDate = book.getLastSoldDate(); // Добавьте поле и метод для последней даты продажи в `Book`.
+                    if (lastSoldDate == null) return true;
+                    return currentDate.getTime() - lastSoldDate.getTime() > sixMonthsInMillis;
+                })
+                .sorted(Comparator.comparing(Book::getPrice).thenComparing(Book::getPublishingYear))
+                .toList();
+    }
+
+
 }
