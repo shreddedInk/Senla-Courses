@@ -15,25 +15,74 @@ public class TestMainForUpdatedBookStore {
         // Создание BookStore
         BookStore bookStore = new BookStore(bookSet, libraryInventory);
 
+
+
         // ======== ТЕСТ СОРТИРОВОК ========
         System.out.println("=== ТЕСТ СОРТИРОВОК ===");
 
-        // Тест сортировки книг
+
+
+        // ======== СПИСОК КНИГ ========
+        System.out.println("\n=== СПИСОК КНИГ ===");
+
+// Сортировка по алфавиту (название книги)
         System.out.println("\nСортировка книг по алфавиту:");
         bookStore.sortBooks(Comparator.comparing(Book::getName))
                 .forEach(book -> System.out.println(book.getDescription()));
 
+// Сортировка по дате издания
         System.out.println("\nСортировка книг по дате издания:");
         bookStore.sortBooks(Comparator.comparing(Book::getPublishingYear))
                 .forEach(book -> System.out.println(book.getDescription()));
 
+// Сортировка по цене
         System.out.println("\nСортировка книг по цене:");
         bookStore.sortBooks(Comparator.comparing(Book::getPrice))
                 .forEach(book -> System.out.println(book.getDescription()));
 
-        System.out.println("\nСортировка книг по наличию:");
+// Сортировка по наличию на складе
+        System.out.println("\nСортировка книг по наличию на складе:");
         bookStore.sortBooks(Comparator.comparing(Book::isAvailable).reversed())
                 .forEach(book -> System.out.println(book.getDescription()));
+
+
+
+        // ======== СПИСОК ЗАКАЗОВ ========
+        System.out.println("\n=== ТЕСТЫ: СПИСОК ЗАКАЗОВ ===");
+
+// Сортировка по дате исполнения
+        System.out.println("\nСортировка заказов по дате исполнения:");
+        bookStore.sortOrders(Comparator.comparing(PurchaseOrder::getOrderDate))
+                .forEach(order -> System.out.println(order.getOrderDetails()));
+
+// Сортировка по суммарной цене книг в заказе
+        System.out.println("\nСортировка заказов по цене:");
+        bookStore.sortOrders(Comparator.comparing(PurchaseOrder::getTotalPrice).reversed())
+                .forEach(order -> System.out.println(order.getOrderDetails()));
+
+// Сортировка по статусу заказа
+        System.out.println("\nСортировка заказов по статусу:");
+        bookStore.sortOrders(Comparator.comparing(PurchaseOrder::getStatus))
+                .forEach(order -> System.out.println(order.getOrderDetails()));
+
+        // ======== СПИСОК ЗАПРОСОВ НА КНИГИ ========
+        System.out.println("\n=== СПИСОК ЗАПРОСОВ НА КНИГИ ===");
+
+// Сортировка по количеству запросов
+        System.out.println("\nСортировка запросов по количеству:");
+        bookStore.sortRequests(Comparator.comparing(
+                        book -> bookStore.getPendingRequests().stream()
+                                .filter(request -> request.getRequestedBook().equals(book))
+                                .count(),
+                        Comparator.reverseOrder()))
+                .forEach(book -> System.out.println(book.getName()));
+
+// Сортировка по количеству запросов
+        System.out.println("\nСортировка запросов по алфавиту:");
+        bookStore.sortRequests(Comparator.comparing(Book::getName))
+                .forEach(book -> System.out.println(book.getName()));
+
+
 
         // ======== ТЕСТ ЗАКАЗОВ И ОПЕРАЦИЙ С НИМИ ========
         System.out.println("\n=== ТЕСТ ЗАКАЗОВ И ОПЕРАЦИЙ ===");
@@ -59,6 +108,8 @@ public class TestMainForUpdatedBookStore {
         // Финализируем заказ 2
         bookStore.finalizeOrder(order2);
 
+
+
         // ======== ТЕСТ ПЕРИОДА И ВЫПОЛНЕННЫХ ЗАКАЗОВ ========
         System.out.println("\n=== ТЕСТ ПЕРИОДА И ВЫПОЛНЕННЫХ ЗАКАЗОВ ===");
 
@@ -79,10 +130,36 @@ public class TestMainForUpdatedBookStore {
         long completedOrderCount = bookStore.getCompletedOrderCountByPeriod(startDate, endDate);
         System.out.println("\nКоличество выполненных заказов за период: " + completedOrderCount);
 
+        // Сортировка выполненных заказов по дате
+        System.out.println("\nСортировка выполненных заказов по дате:");
+        bookStore.getCompletedOrdersByPeriod(startDate, endDate, Comparator.comparing(PurchaseOrder::getOrderDate))
+                .forEach(order -> System.out.println(order.getOrderDetails()));
+
+// Сортировка выполненных заказов по общей цене
+        System.out.println("\nСортировка выполненных заказов по общей цене:");
+        bookStore.getCompletedOrdersByPeriod(startDate, endDate, Comparator.comparing(PurchaseOrder::getTotalPrice).reversed())
+                .forEach(order -> System.out.println(order.getOrderDetails()));
+
+
+
         // ======== ТЕСТ ЗАЛЕЖАВШИХСЯ КНИГ ========
         System.out.println("\n=== ТЕСТ ЗАЛЕЖАВШИХСЯ КНИГ ===");
-
+        Date currentDate = new Date();
         bookStore.getStaleBooks(new Date()).forEach(book -> System.out.println(book.getDescription()));
+
+        // Сортировка залежавшихся книг по дате поступления
+        System.out.println("\nСортировка залежавшихся книг по дате поступления:");
+        bookStore.getStaleBooks(currentDate).stream()
+                .sorted(Comparator.comparing(Book::getLastSoldDate, Comparator.nullsFirst(Comparator.naturalOrder())))
+                .forEach(book -> System.out.println(book.getDescription()));
+
+// Сортировка залежавшихся книг по цене
+        System.out.println("\nСортировка залежавшихся книг по цене:");
+        bookStore.getStaleBooks(currentDate).stream()
+                .sorted(Comparator.comparing(Book::getPrice))
+                .forEach(book -> System.out.println(book.getDescription()));
+
+
 
         // ======== ТЕСТ ЗАПРОСОВ НА КНИГИ ========
         System.out.println("\n=== ТЕСТ ЗАПРОСОВ ===");
@@ -91,34 +168,7 @@ public class TestMainForUpdatedBookStore {
         bookStore.getPendingRequests()
                 .forEach(request -> System.out.println(request.getRequestedBook().getName()));
 
-        System.out.println("\nСортировка запросов по количеству:");
-        bookStore.sortRequests(Comparator.comparing(
-                        book -> bookStore.getPendingRequests().stream()
-                                .filter(request -> request.getRequestedBook().equals(book))
-                                .count(),
-                        Comparator.reverseOrder()))
-                .forEach(book -> System.out.println(book.getName()));
 
-        System.out.println("\nСортировка запросов по алфавиту:");
-        bookStore.sortRequests(Comparator.comparing(Book::getName))
-                .forEach(book -> System.out.println(book.getName()));
-
-
-        // ======== ТЕСТ СОРТИРОВКИ ЗАКАЗОВ ========
-        System.out.println("\n=== ТЕСТ СОРТИРОВКИ ЗАКАЗОВ ===");
-
-        // Сортировка заказов по дате создания (по возрастанию)
-        System.out.println("\nСортировка заказов по дате создания:");
-        bookStore.sortOrders(Comparator.comparing(PurchaseOrder::getOrderDate))
-                .forEach(order -> System.out.println(order.getOrderDetails()));
-
-        // Сортировка заказов по общей стоимости (по убыванию)
-        System.out.println("\nСортировка заказов по общей стоимости:");
-        bookStore.sortOrders(Comparator.comparing(PurchaseOrder::getTotalPrice).reversed())
-                .forEach(order -> {
-                    System.out.println("Order Total: $" + order.getTotalPrice());
-                    System.out.println(order.getOrderDetails());
-                });
 
         // ======== ПРОВЕРКА ОТДЕЛЬНЫХ ОПЕРАЦИЙ ========
         System.out.println("\n=== ПРОВЕРКА ОТДЕЛЬНЫХ ОПЕРАЦИЙ ===");
