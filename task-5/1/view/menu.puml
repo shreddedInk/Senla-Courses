@@ -1,0 +1,46 @@
+@startuml
+
+class Menu {
+    - name : String
+    - menuItems : MenuItem[]
+    + getters()
+    + setters()
+}
+
+class MenuItem {
+    - title : String
+    - action : IAction
+    - nextMenu : Menu
+    + doAction() : void
+}
+
+class Navigator {
+    - currentMenu : Menu
+    + printMenu()
+    + navigate(Integer index)
+}
+
+class MenuController {
+    - builder : Builder
+    - navigator : Navigator
+    + run()
+}
+
+class Builder {
+    - rootMenu : Menu
+    + buildMenu()
+    + getRootMenu() : Menu
+}
+
+interface IAction {
+    + execute() : void
+}
+
+MenuItem --o Menu
+Menu --o Navigator
+Navigator --o MenuController
+Builder --o MenuController
+Builder ..> "uses" IAction
+Builder ..> "uses" Menu
+IAction --o MenuItem
+@enduml
