@@ -1,4 +1,4 @@
-package controller;
+package action;
 
 public class ViewStaleBooksAction implements IAction {
     private final ConsoleActions consoleActions;

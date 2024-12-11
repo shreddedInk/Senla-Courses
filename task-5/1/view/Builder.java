@@ -1,8 +1,9 @@
-package controller;
+package view;
 
-import model.BookStore;
-import view.Menu;
-import view.MenuItem;
+import action.*;
+import model.bookstore.BookStore;
+import view.menu.Menu;
+import view.menu.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;

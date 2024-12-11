@@ -1,8 +1,8 @@
-package controller;
+package action;
 
-import model.BookStore;
-import model.PurchaseOrder;
-import model.Book;
+import model.bookstore.BookStore;
+import model.order.PurchaseOrder;
+import model.book.Book;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

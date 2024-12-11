@@ -1,4 +1,4 @@
-package controller;
+package action;
 
 public class FinalizeOrderAction implements IAction {
     private final ConsoleActions consoleActions;

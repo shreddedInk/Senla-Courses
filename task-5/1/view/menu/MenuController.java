@@ -1,6 +1,6 @@
-package controller;
+package view.menu;
 
-import view.Navigator;
+import view.Builder;
 
 public class MenuController {
     private Builder builder;

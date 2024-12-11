@@ -1,6 +1,4 @@
-package controller;
-
-import model.BookStore;
+package action;
 
 public class ViewBooksByPriceAction implements IAction {
     private final ConsoleActions consoleActions;

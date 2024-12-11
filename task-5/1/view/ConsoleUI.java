@@ -1,10 +1,11 @@
 package view;
 
-import model.*;
-import controller.Builder;
-import controller.MenuController;
-import view.Navigator;
-import controller.*;
+import action.ConsoleActions;
+import model.book.Book;
+import model.bookstore.BookStore;
+import model.library.LibraryInventory;
+import view.menu.MenuController;
+import view.menu.Navigator;
 
 import java.util.HashSet;
 import java.util.Set;

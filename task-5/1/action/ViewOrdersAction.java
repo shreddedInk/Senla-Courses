@@ -1,4 +1,4 @@
-package controller;
+package action;
 
 public class ViewOrdersAction implements IAction {
     private final ConsoleActions consoleActions;

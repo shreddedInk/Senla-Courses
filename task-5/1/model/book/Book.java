@@ -1,4 +1,4 @@
-package model;
+package model.book;
 
 import java.util.Date;
 

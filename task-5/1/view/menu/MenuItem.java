@@ -1,6 +1,6 @@
-package view;
+package view.menu;
 
-import controller.IAction;
+import action.IAction;
 
 public class MenuItem {
     private String title;

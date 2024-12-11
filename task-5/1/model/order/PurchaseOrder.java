@@ -1,4 +1,6 @@
-package model;
+package model.order;
+
+import model.book.Book;
 
 import java.util.Date;
 import java.util.Set;

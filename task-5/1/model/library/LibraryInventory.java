@@ -1,4 +1,6 @@
-package model;
+package model.library;
+
+import model.book.Book;
 
 public class LibraryInventory {
 

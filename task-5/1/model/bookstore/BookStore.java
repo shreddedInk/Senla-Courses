@@ -1,4 +1,10 @@
-package model;
+package model.bookstore;
+
+import model.book.Book;
+import model.library.LibraryInventory;
+import model.library.LibraryRequest;
+import model.order.OrderStatus;
+import model.order.PurchaseOrder;
 
 import java.util.*;
 import java.util.stream.Collectors;
