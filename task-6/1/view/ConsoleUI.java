@@ -3,7 +3,6 @@ package view;
 import action.ConsoleActions;
 import model.book.Book;
 import model.bookstore.BookStore;
-import model.library.LibraryInventory;
 import view.menu.MenuController;
 import view.menu.Navigator;
 
@@ -33,7 +32,7 @@ public class ConsoleUI {
                 new Book("3", "Java Basics", "Author C", 1999, 40.0, false),
                 new Book("4", "Data Structures", "Author D", 2000, 60.0, false)
         ));
-        BookStore bookStore = new BookStore(availableBooks, new LibraryInventory());
+        BookStore bookStore = new BookStore(availableBooks);
         ConsoleUI ui = new ConsoleUI(bookStore);
         ui.run();
     }

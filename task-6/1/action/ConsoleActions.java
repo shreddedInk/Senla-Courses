@@ -309,4 +309,10 @@ public class ConsoleActions {
             System.out.println("Invalid date format. Please use yyyy-MM-dd.");
         }
     }
+
+    public void markBookAsUnavailable() {
+        System.out.print("Enter the ID of the book to mark as unavailable: ");
+        String bookId = scanner.nextLine();
+        bookStore.markBookAsUnavailable(bookId);
+    }
 }

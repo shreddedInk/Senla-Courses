@@ -1,7 +1,6 @@
 package model.bookstore;
 
 import model.book.Book;
-import model.library.LibraryInventory;
 import model.library.LibraryRequest;
 import model.order.OrderStatus;
 import model.order.PurchaseOrder;
@@ -22,13 +21,11 @@ public class BookStore {
     private Set<Book> availableBooks;
     private ArrayList<PurchaseOrder> activePurchaseOrders;
     private ArrayList<LibraryRequest> pendingRequests;
-    private LibraryInventory libraryInventory;
 
-    public BookStore(Set<Book> availableBooks, LibraryInventory libraryInventory) {
+    public BookStore(Set<Book> availableBooks) {
         this.availableBooks = availableBooks;
         this.activePurchaseOrders = new ArrayList<>();
         this.pendingRequests = new ArrayList<>();
-        this.libraryInventory = libraryInventory;
     }
 
     public List<Book> getAvailableBooks() {
@@ -287,5 +284,18 @@ public class BookStore {
         }
 
         Files.write(path, updatedLines);
+    }
+
+    public void markBookAsUnavailable(String bookId) {
+        Book book = availableBooks.stream()
+                .filter(b -> b.getId().equals(bookId))
+                .findFirst()
+                .orElse(null);
+        if (book != null) {
+            book.setAvailable(false);
+            System.out.println("Book marked as unavailable: " + book.getName());
+        } else {
+            System.out.println("Book not found with ID: " + bookId);
+        }
     }
 }
