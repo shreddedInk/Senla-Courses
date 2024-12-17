@@ -10,6 +10,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -108,15 +113,6 @@ public class BookStore {
                 .collect(Collectors.toList());
     }
 
-    public List<Book> sortRequests(Comparator<Book> comparator) {
-        Map<Book, Long> requestCounts = pendingRequests.stream()
-                .collect(Collectors.groupingBy(LibraryRequest::getRequestedBook, Collectors.counting()));
-
-        return requestCounts.keySet().stream()
-                .sorted(comparator)
-                .collect(Collectors.toList());
-    }
-
     public List<Book> getStaleBooks(Date currentDate) {
         long sixMonthsInMillis = 6L * 30 * 24 * 60 * 60 * 1000;
         return availableBooks.stream()
@@ -148,12 +144,37 @@ public class BookStore {
     }
 
     public void exportBooksToCSV(String filePath) throws IOException {
-        try (FileWriter fw = new FileWriter(filePath)) {
-            for (Book book : availableBooks) {
-                fw.write(book.getId() + "," + book.getName() + "," + book.getAuthor() + "," +
-                        book.getPublishingYear() + "," + book.getPrice() + "," + book.isAvailable() + "\n");
+        Path path = Paths.get(filePath);
+        Map<String, Book> bookMap = availableBooks.stream()
+                .collect(Collectors.toMap(Book::getId, book -> book));
+
+        List<String> lines = Files.exists(path)
+                ? Files.readAllLines(path)
+                : new ArrayList<>();
+
+        Set<String> updatedIds = new HashSet<>();
+        List<String> updatedLines = new ArrayList<>();
+
+        for (String line : lines) {
+            String[] values = line.split(",");
+            String id = values[0];
+            if (bookMap.containsKey(id)) {
+                Book book = bookMap.get(id);
+                updatedLines.add(book.getId() + "," + book.getName() + "," + book.getAuthor() + "," +
+                        book.getPublishingYear() + "," + book.getPrice() + "," + book.isAvailable());
+                updatedIds.add(id);
+                bookMap.remove(id);
+            } else {
+                updatedLines.add(line);
             }
         }
+
+        for (Book book : bookMap.values()) {
+            updatedLines.add(book.getId() + "," + book.getName() + "," + book.getAuthor() + "," +
+                    book.getPublishingYear() + "," + book.getPrice() + "," + book.isAvailable());
+        }
+
+        Files.write(path, updatedLines);
     }
 
     public void importOrdersFromCSV(String filePath) throws IOException {
@@ -179,14 +200,44 @@ public class BookStore {
         }
     }
 
-
     public void exportOrdersToCSV(String filePath) throws IOException {
-        try (FileWriter fw = new FileWriter(filePath)) {
-            for (PurchaseOrder order : activePurchaseOrders) {
-                fw.write(order.getId() + "," + String.join(",", order.getCart().stream().map(Book::getId).toArray(String[]::new)) + "\n");
+        Path path = Paths.get(filePath);
+        Map<String, PurchaseOrder> orderMap = activePurchaseOrders.stream()
+                .collect(Collectors.toMap(PurchaseOrder::getId, order -> order));
+
+        try (RandomAccessFile raf = new RandomAccessFile(filePath, "rw")) {
+            String line;
+            long filePointer = 0;
+            while ((line = raf.readLine()) != null) {
+                String[] values = line.split(",");
+                String id = values[0];
+                if (orderMap.containsKey(id)) {
+                    PurchaseOrder order = orderMap.get(id);
+                    String updatedLine = order.getId() + ","
+                            + String.join(",", order.getCart().stream()
+                            .map(Book::getId)
+                            .toArray(String[]::new))
+                            + "," + order.getTotalPrice();
+                    raf.seek(filePointer);
+                    raf.writeBytes(updatedLine + "\n");
+                    orderMap.remove(id);
+                }
+                filePointer = raf.getFilePointer();
+            }
+
+            for (PurchaseOrder order : orderMap.values()) {
+                String newLine = order.getId() + ","
+                        + String.join(",", order.getCart().stream()
+                        .map(Book::getId)
+                        .toArray(String[]::new))
+                        + "," + order.getTotalPrice();
+                raf.seek(filePointer);
+                raf.writeBytes(newLine + "\n");
+                filePointer = raf.getFilePointer();
             }
         }
     }
+
 
     public void importRequestsFromCSV(String filePath) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -206,13 +257,35 @@ public class BookStore {
         }
     }
 
-
     public void exportRequestsToCSV(String filePath) throws IOException {
-        try (FileWriter fw = new FileWriter(filePath)) {
-            for (LibraryRequest request : pendingRequests) {
-                fw.write(request.getId() + "," + request.getRequestedBook().getId() + "\n");
+        Path path = Paths.get(filePath);
+        Map<String, LibraryRequest> requestMap = pendingRequests.stream()
+                .collect(Collectors.toMap(LibraryRequest::getId, request -> request));
+
+        List<String> lines = Files.exists(path)
+                ? Files.readAllLines(path)
+                : new ArrayList<>();
+
+        Set<String> updatedIds = new HashSet<>();
+        List<String> updatedLines = new ArrayList<>();
+
+        for (String line : lines) {
+            String[] values = line.split(",");
+            String id = values[0];
+            if (requestMap.containsKey(id)) {
+                LibraryRequest request = requestMap.get(id);
+                updatedLines.add(request.getId() + "," + request.getRequestedBook().getId());
+                updatedIds.add(id);
+                requestMap.remove(id);
+            } else {
+                updatedLines.add(line);
             }
         }
-    }
 
+        for (LibraryRequest request : requestMap.values()) {
+            updatedLines.add(request.getId() + "," + request.getRequestedBook().getId());
+        }
+
+        Files.write(path, updatedLines);
+    }
 }

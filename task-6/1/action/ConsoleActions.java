@@ -162,8 +162,12 @@ public class ConsoleActions {
         try {
             Path path = Paths.get(filePath);
             if (Files.exists(path.getParent())) {
-                bookStore.exportBooksToCSV(filePath);
-                System.out.println("Books exported successfully!");
+                if (Files.isWritable(path)) {
+                    bookStore.exportBooksToCSV(filePath);
+                    System.out.println("Books exported successfully!");
+                } else {
+                    System.out.println("File is already open by another process: " + filePath);
+                }
             } else {
                 System.out.println("Directory not found: " + path.getParent());
             }
@@ -198,8 +202,12 @@ public class ConsoleActions {
         try {
             Path path = Paths.get(filePath);
             if (Files.exists(path.getParent())) {
-                bookStore.exportOrdersToCSV(filePath);
-                System.out.println("Orders exported successfully!");
+                if (Files.isWritable(path)) {
+                    bookStore.exportOrdersToCSV(filePath);
+                    System.out.println("Orders exported successfully!");
+                } else {
+                    System.out.println("File is already open by another process: " + filePath);
+                }
             } else {
                 System.out.println("Directory not found: " + path.getParent());
             }
@@ -234,8 +242,12 @@ public class ConsoleActions {
         try {
             Path path = Paths.get(filePath);
             if (Files.exists(path.getParent())) {
-                bookStore.exportRequestsToCSV(filePath);
-                System.out.println("Requests exported successfully!");
+                if (Files.isWritable(path)) {
+                    bookStore.exportRequestsToCSV(filePath);
+                    System.out.println("Requests exported successfully!");
+                } else {
+                    System.out.println("File is already open by another process: " + filePath);
+                }
             } else {
                 System.out.println("Directory not found: " + path.getParent());
             }
