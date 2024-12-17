@@ -75,17 +75,17 @@ public class ConsoleActions {
 
     public void createOrder() {
         System.out.println("\n=== Create an Order ===");
-        System.out.print("Enter the names of the books to order (comma-separated): ");
-        String[] bookNames = scanner.nextLine().split(",");
+        System.out.print("Enter the IDs of the books to order (comma-separated): ");
+        String[] bookIds = scanner.nextLine().split(",");
         Set<Book> selectedBooks = new HashSet<>();
 
-        for (String bookName : bookNames) {
+        for (String bookId : bookIds) {
             bookStore.getAvailableBooks().stream()
-                    .filter(book -> book.getName().equalsIgnoreCase(bookName.trim()))
+                    .filter(book -> book.getId().equals(bookId.trim()))
                     .findFirst()
                     .ifPresentOrElse(
                             selectedBooks::add,
-                            () -> System.out.println("Book \"" + bookName.trim() + "\" not found or unavailable.")
+                            () -> System.out.println("Book with ID \"" + bookId.trim() + "\" not found or unavailable.")
                     );
         }
 
@@ -99,27 +99,11 @@ public class ConsoleActions {
 
     public void finalizeOrder() {
         System.out.println("\n=== Finalize an Order ===");
-        System.out.print("Enter the date of the order to finalize (format: yyyy-MM-dd): ");
-        String dateInput = scanner.nextLine();
-        System.out.print("Enter the names of the books in the order (comma-separated): ");
-        String[] bookNames = scanner.nextLine().split(",");
+        System.out.print("Enter the ID of the order to finalize: ");
+        String orderId = scanner.nextLine();
 
-        Set<String> bookNameSet = Arrays.stream(bookNames)
-                .map(String::trim)
-                .collect(Collectors.toSet());
-
-        bookStore.sortOrders(Comparator.comparing(PurchaseOrder::getOrderDate)).stream()
-                .filter(order -> {
-                    String orderDate = new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderDate());
-                    if (!orderDate.equals(dateInput)) {
-                        return false;
-                    }
-
-                    Set<String> orderBookNames = order.getCart().stream()
-                            .map(Book::getName)
-                            .collect(Collectors.toSet());
-                    return orderBookNames.equals(bookNameSet);
-                })
+        bookStore.getOrders().stream()
+                .filter(order -> order.getId().equals(orderId))
                 .findFirst()
                 .ifPresentOrElse(
                         order -> {
