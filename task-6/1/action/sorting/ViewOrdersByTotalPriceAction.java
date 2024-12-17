@@ -1,4 +1,7 @@
-package action;
+package action.sorting;
+
+import action.ConsoleActions;
+import action.IAction;
 
 public class ViewOrdersByTotalPriceAction implements IAction {
     private final ConsoleActions consoleActions;

@@ -4,8 +4,8 @@ import action.ConsoleActions;
 import model.book.Book;
 import model.bookstore.BookStore;
 import model.library.LibraryInventory;
-import view.menu.MenuController;
-import view.menu.Navigator;
+import view.menu.*;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,13 +28,14 @@ public class ConsoleUI {
 
     public static void main(String[] args) {
         Set<Book> availableBooks = new HashSet<>(Arrays.asList(
-                new Book("Mathematics", "Author A", 1997, 50.0, true),
-                new Book("English for Mathematics", "Author B", 1998, 30.0, true),
-                new Book("Java Basics", "Author C", 1999, 40.0, false),
-                new Book("Data Structures", "Author D", 2000, 60.0, false)
+                new Book("1", "Mathematics", "Author A", 1997, 50.0, true),
+                new Book("2", "English for Mathematics", "Author B", 1998, 30.0, true),
+                new Book("3", "Java Basics", "Author C", 1999, 40.0, false),
+                new Book("4", "Data Structures", "Author D", 2000, 60.0, false)
         ));
         BookStore bookStore = new BookStore(availableBooks, new LibraryInventory());
         ConsoleUI ui = new ConsoleUI(bookStore);
         ui.run();
     }
+
 }

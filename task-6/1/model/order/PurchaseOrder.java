@@ -6,21 +6,24 @@ import java.util.Date;
 import java.util.Set;
 
 public class PurchaseOrder {
-    private static int idCounter = 0;
-    private final int id;
+    private String id;
     private Set<Book> cart;
     private OrderStatus status;
     private Date orderDate;
 
-    public PurchaseOrder(Set<Book> cart) {
+    public PurchaseOrder(String id, Set<Book> cart) {
+        this.id = id;
         this.cart = cart;
         this.status = OrderStatus.OPEN;
         this.orderDate = new Date();
-        this.id = ++idCounter;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Date getOrderDate() {

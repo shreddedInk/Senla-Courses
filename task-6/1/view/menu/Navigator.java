@@ -22,7 +22,7 @@ public class Navigator {
             System.out.print("Choose an option: ");
             String input = scanner.nextLine();
 
-            if (input.equalsIgnoreCase("exit") || input.equals("7")) {
+            if (input.equalsIgnoreCase("exit") || input.equals("0")) {
                 System.out.println("Exiting... Goodbye!");
                 break;
             }

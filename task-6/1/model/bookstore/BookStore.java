@@ -6,6 +6,10 @@ import model.library.LibraryRequest;
 import model.order.OrderStatus;
 import model.order.PurchaseOrder;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,12 +35,12 @@ public class BookStore {
     }
 
     public PurchaseOrder generateOrder(Set<Book> selectedBooks) {
-        PurchaseOrder order = new PurchaseOrder(selectedBooks);
+        PurchaseOrder order = new PurchaseOrder(UUID.randomUUID().toString(), selectedBooks);
         activePurchaseOrders.add(order);
 
         for (Book book : selectedBooks) {
             if (!book.isAvailable()) {
-                pendingRequests.add(new LibraryRequest(book));
+                pendingRequests.add(new LibraryRequest(UUID.randomUUID().toString(), book));
                 System.out.println("Request created for unavailable book: " + book.getName());
             }
         }
@@ -122,6 +126,93 @@ public class BookStore {
                     return currentDate.getTime() - lastSoldDate.getTime() > sixMonthsInMillis;
                 })
                 .sorted(Comparator.comparing(Book::getPrice).thenComparing(Book::getPublishingYear))
-                .toList();
+                .collect(Collectors.toList());
     }
+
+    public void importBooksFromCSV(String filePath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                String id = values[0];
+                String name = values[1];
+                String author = values[2];
+                int publishingYear = Integer.parseInt(values[3]);
+                double price = Double.parseDouble(values[4]);
+                boolean available = Boolean.parseBoolean(values[5]);
+
+                Book book = new Book(id, name, author, publishingYear, price, available);
+                availableBooks.add(book);
+            }
+        }
+    }
+
+    public void exportBooksToCSV(String filePath) throws IOException {
+        try (FileWriter fw = new FileWriter(filePath)) {
+            for (Book book : availableBooks) {
+                fw.write(book.getId() + "," + book.getName() + "," + book.getAuthor() + "," +
+                        book.getPublishingYear() + "," + book.getPrice() + "," + book.isAvailable() + "\n");
+            }
+        }
+    }
+
+    public void importOrdersFromCSV(String filePath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                String id = values[0];
+                Set<Book> cart = new HashSet<>();
+                for (int i = 1; i < values.length; i++) {
+                    int finalI = i;
+                    Book book = availableBooks.stream()
+                            .filter(b -> b.getId().equals(values[finalI]))
+                            .findFirst()
+                            .orElse(null);
+                    if (book != null) {
+                        cart.add(book);
+                    }
+                }
+                PurchaseOrder order = new PurchaseOrder(id, cart);
+                activePurchaseOrders.add(order);
+            }
+        }
+    }
+
+
+    public void exportOrdersToCSV(String filePath) throws IOException {
+        try (FileWriter fw = new FileWriter(filePath)) {
+            for (PurchaseOrder order : activePurchaseOrders) {
+                fw.write(order.getId() + "," + String.join(",", order.getCart().stream().map(Book::getId).toArray(String[]::new)) + "\n");
+            }
+        }
+    }
+
+    public void importRequestsFromCSV(String filePath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                String id = values[0];
+                Book book = availableBooks.stream()
+                        .filter(b -> b.getId().equals(values[1]))
+                        .findFirst()
+                        .orElse(null);
+                if (book != null) {
+                    LibraryRequest request = new LibraryRequest(id, book);
+                    pendingRequests.add(request);
+                }
+            }
+        }
+    }
+
+
+    public void exportRequestsToCSV(String filePath) throws IOException {
+        try (FileWriter fw = new FileWriter(filePath)) {
+            for (LibraryRequest request : pendingRequests) {
+                fw.write(request.getId() + "," + request.getRequestedBook().getId() + "\n");
+            }
+        }
+    }
+
 }

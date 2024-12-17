@@ -1,9 +1,13 @@
 package action;
 
+import model.book.Book;
 import model.bookstore.BookStore;
 import model.order.PurchaseOrder;
-import model.book.Book;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -148,5 +152,113 @@ public class ConsoleActions {
         Date currentDate = new Date();
         bookStore.getStaleBooks(currentDate)
                 .forEach(book -> System.out.println(book.getDescription()));
+    }
+
+    public void importBooks() {
+        System.out.print("Enter the path to the CSV file for importing books: ");
+        String filePath = scanner.nextLine();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path)) {
+                bookStore.importBooksFromCSV(filePath);
+                System.out.println("Books imported successfully!");
+            } else {
+                System.out.println("File not found: " + filePath);
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to import books: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while importing books: " + e.getMessage());
+        }
+    }
+
+    public void exportBooks() {
+        System.out.print("Enter the path to the CSV file for exporting books: ");
+        String filePath = scanner.nextLine();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path.getParent())) {
+                bookStore.exportBooksToCSV(filePath);
+                System.out.println("Books exported successfully!");
+            } else {
+                System.out.println("Directory not found: " + path.getParent());
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to export books: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while exporting books: " + e.getMessage());
+        }
+    }
+
+    public void importOrders() {
+        System.out.print("Enter the path to the CSV file for importing orders: ");
+        String filePath = scanner.nextLine();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path)) {
+                bookStore.importOrdersFromCSV(filePath);
+                System.out.println("Orders imported successfully!");
+            } else {
+                System.out.println("File not found: " + filePath);
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to import orders: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while importing orders: " + e.getMessage());
+        }
+    }
+
+    public void exportOrders() {
+        System.out.print("Enter the path to the CSV file for exporting orders: ");
+        String filePath = scanner.nextLine();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path.getParent())) {
+                bookStore.exportOrdersToCSV(filePath);
+                System.out.println("Orders exported successfully!");
+            } else {
+                System.out.println("Directory not found: " + path.getParent());
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to export orders: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while exporting orders: " + e.getMessage());
+        }
+    }
+
+    public void importRequests() {
+        System.out.print("Enter the path to the CSV file for importing requests: ");
+        String filePath = scanner.nextLine();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path)) {
+                bookStore.importRequestsFromCSV(filePath);
+                System.out.println("Requests imported successfully!");
+            } else {
+                System.out.println("File not found: " + filePath);
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to import requests: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while importing requests: " + e.getMessage());
+        }
+    }
+
+    public void exportRequests() {
+        System.out.print("Enter the path to the CSV file for exporting requests: ");
+        String filePath = scanner.nextLine();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path.getParent())) {
+                bookStore.exportRequestsToCSV(filePath);
+                System.out.println("Requests exported successfully!");
+            } else {
+                System.out.println("Directory not found: " + path.getParent());
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to export requests: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An error occurred while exporting requests: " + e.getMessage());
+        }
     }
 }

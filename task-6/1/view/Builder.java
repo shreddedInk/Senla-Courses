@@ -1,9 +1,12 @@
 package view;
 
 import action.*;
+import action.exporting.*;
+import action.importing.*;
+import action.sorting.*;
 import model.bookstore.BookStore;
-import view.menu.Menu;
-import view.menu.MenuItem;
+
+import view.menu.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,12 @@ public class Builder {
         mainMenuItems.add(new MenuItem("Finalize Order", new FinalizeOrderAction(consoleActions), null));
         mainMenuItems.add(new MenuItem("Resolve Book Request", new ResolveBookRequestAction(consoleActions), null));
         mainMenuItems.add(new MenuItem("List Stale Books", new ViewStaleBooksAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Import Books", new ImportBooksAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Export Books", new ExportBooksAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Import Orders", new ImportOrdersAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Export Orders", new ExportOrdersAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Import Requests", new ImportRequestsAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Export Requests", new ExportRequestsAction(consoleActions), null));
         mainMenuItems.add(new MenuItem("Exit", null, null));
         rootMenu = new Menu("Main Menu", mainMenuItems);
         return rootMenu;
