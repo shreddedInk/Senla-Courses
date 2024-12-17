@@ -2,6 +2,9 @@ package view;
 
 import action.*;
 import action.exporting.*;
+import action.getinfo.GetCompletedOrderCountByPeriodAction;
+import action.getinfo.GetCompletedOrdersByPeriodAction;
+import action.getinfo.GetTotalEarningsByPeriodAction;
 import action.importing.*;
 import action.sorting.*;
 import model.bookstore.BookStore;
@@ -28,6 +31,9 @@ public class Builder {
         mainMenuItems.add(new MenuItem("Export Orders", new ExportOrdersAction(consoleActions), null));
         mainMenuItems.add(new MenuItem("Import Requests", new ImportRequestsAction(consoleActions), null));
         mainMenuItems.add(new MenuItem("Export Requests", new ExportRequestsAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Get Completed Orders by Period", new GetCompletedOrdersByPeriodAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Get Total Earnings by Period", new GetTotalEarningsByPeriodAction(consoleActions), null));
+        mainMenuItems.add(new MenuItem("Get Completed Order Count by Period", new GetCompletedOrderCountByPeriodAction(consoleActions), null));
         mainMenuItems.add(new MenuItem("Exit", null, null));
         rootMenu = new Menu("Main Menu", mainMenuItems);
         return rootMenu;

@@ -257,4 +257,56 @@ public class ConsoleActions {
             System.out.println("An error occurred while exporting requests: " + e.getMessage());
         }
     }
+
+    public void getCompletedOrdersByPeriod() {
+        System.out.print("Enter the start date (format: yyyy-MM-dd): ");
+        String startDateInput = scanner.nextLine();
+        System.out.print("Enter the end date (format: yyyy-MM-dd): ");
+        String endDateInput = scanner.nextLine();
+
+        try {
+            Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateInput);
+            Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateInput);
+
+            List<PurchaseOrder> completedOrders = bookStore.getCompletedOrdersByPeriod(startDate, endDate, Comparator.comparing(PurchaseOrder::getOrderDate));
+            System.out.println("\nCompleted Orders by Period:");
+            completedOrders.forEach(order -> System.out.println(order.getOrderDetails()));
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
+    }
+
+    public void getTotalEarningsByPeriod() {
+        System.out.print("Enter the start date (format: yyyy-MM-dd): ");
+        String startDateInput = scanner.nextLine();
+        System.out.print("Enter the end date (format: yyyy-MM-dd): ");
+        String endDateInput = scanner.nextLine();
+
+        try {
+            Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateInput);
+            Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateInput);
+
+            double totalEarnings = bookStore.getTotalEarningsByPeriod(startDate, endDate);
+            System.out.println("\nTotal Earnings by Period: $" + totalEarnings);
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
+    }
+
+    public void getCompletedOrderCountByPeriod() {
+        System.out.print("Enter the start date (format: yyyy-MM-dd): ");
+        String startDateInput = scanner.nextLine();
+        System.out.print("Enter the end date (format: yyyy-MM-dd): ");
+        String endDateInput = scanner.nextLine();
+
+        try {
+            Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateInput);
+            Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateInput);
+
+            long completedOrderCount = bookStore.getCompletedOrderCountByPeriod(startDate, endDate);
+            System.out.println("\nCompleted Order Count by Period: " + completedOrderCount);
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
+    }
 }

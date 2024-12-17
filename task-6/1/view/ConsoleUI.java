@@ -4,8 +4,8 @@ import action.ConsoleActions;
 import model.book.Book;
 import model.bookstore.BookStore;
 import model.library.LibraryInventory;
-import view.menu.*;
-
+import view.menu.MenuController;
+import view.menu.Navigator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,5 +37,4 @@ public class ConsoleUI {
         ConsoleUI ui = new ConsoleUI(bookStore);
         ui.run();
     }
-
 }
